@@ -1,4 +1,4 @@
-# Open Water Foundation / Learn Web Development #
+# Learn Web Development #
 
 This documentation provides resources to learn how to develop web applications,
 focusing on software that runs in a web browser and utilizes cloud data and platforms.
@@ -19,7 +19,11 @@ See also other [OWF learning resources](http://learn.openwaterfoundation.org).
 The documentation is organized in order of important web development topics.
 Because web development can use many different technologies,
 the initial documentation focuses on common technical issues.
-More comprehensive information about specific web technology frameworks can be added in the future.
+More comprehensive information about specific web technology frameworks is available on
+more specific learning pages.
+
+Use the links on the left to navigate through the full website and links on the right to navigate within this page.
+The links may be compressed into a menu if the page size has been reduced.
 
 See the [Resources section](resources) for general information about web development.
 
@@ -34,4 +38,4 @@ The source files for this documentation are maintained in a GitHub repository:  
 
 ## Release Notes ##
 
-See the [Release Notes](release-notes).
+See the [Release Notes](https://github.com/OpenWaterFoundation/owf-learn-web-dev#release-notes) on the GitHub repository.

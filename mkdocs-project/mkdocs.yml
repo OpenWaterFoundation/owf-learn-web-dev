@@ -6,13 +6,13 @@ site_name: Learn / Web Development
 pages:
 - Home: index.md
 - Overview: overview.md
+- Development Tools: dev-tools.md
 - Frameworks: frameworks.md
 - Caching: caching.md
 - CORS: cors.md
-- Authentication: authentication.md
+- Authentication and Security: authentication.md
 - Cloud Platforms: cloud-platforms.md
 - Resources: resources.md
-- Release Notes: release-notes.md
 # ------- configuration properties ---------------
 # Use Material theme
 # - installation notes:  https://github.com/squidfunk/mkdocs-material

@@ -1,6 +1,7 @@
 # Learn Web Development / Resources #
 
-The following are useful resources, in alphabetical topic order.
+The following are useful resources, in alphabetical order by topic and tool.
+Use the web browser's search feature to find specific information.
 
 * [Authentication](#authentication)
 * [Caching](#caching)
@@ -16,3 +17,7 @@ The following are useful resources, in alphabetical topic order.
 ## Cloud Platforms ##
 
 ## Web Frameworks ##
+
+### Angular ###
+
+* [Angular](https://angular.io/)
