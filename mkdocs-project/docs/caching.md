@@ -44,6 +44,10 @@ but in general asking users to change such things is probably inconvenient and m
 The following sections present several common cases that illustrate caching issues.
 Other sections describe technical details involved in overcoming caching issues.
 
+For extra reading see [AWS Caching Overview](https://aws.amazon.com/caching/), 
+[HTTP Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching), 
+or [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c).
+
 ## Caching General Goal ##
 
 The general goal of caching is to use a local copy of a resource first if it makes sense to do so.
@@ -75,13 +79,35 @@ may involve only HTML, CSS, JavaScript, and data files, such as
 comma-separated-value data and GeoJSON files visualization.
 The web application may access data resources in several ways:
 
-* Use the URL for a data file directly, such as a relative path URL with files found in the website file tree.
+* Use the URL for a data file directly, such as a relative path URL with files found in the website file tree.   
+```html 
+<link rel="stylesheet" href="relative/file/path.css" />
+<script src="relative/file/path.js"></script>
+```
 * Pass the URL of a data file to a JavaScript library, such as Leaflet web mapping URL for a map layer.
+```html
+<script>
+  L.tileLayer('https://api.tiles.mapbox.com/data/file', {}).addTo(mymap);
+</script>
+```
 * Use the URL of remote resource, such as including in an
 [HTML `<iframe>`](https://www.w3schools.com/tags/tag_iframe.asp).
+```html
+<iframe data-src="http://viz.openwaterfoundation.org/co/owf-viz-co-snodas-gapminder/" scrolling="no" frameborder="0"></iframe>
+```
 * Use [Ajax](https://www.w3schools.com/xml/ajax_intro.asp) approach and `XmlHttpRequest` function
 to read a data file or web service output from the same or different server.
 This approach is often encapsulated in library functions that read data.
+```javascript
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "data.txt",
+        dataType: "text",
+        success: function(data) {processData(data);}
+     });
+});
+```
 
 In all cases, the web developer must be able to effectively test the application during development
 with frequent changes to source files and data.
@@ -102,8 +128,16 @@ Often, the normal web browser session will cache files, even if they have been c
 The Chrome "incognito" mode can be used to open a self-contained session that has a clean cache,
 and therefore loads changed files.
 Although incognito mode is useful to troubleshoot caching,
-it is not something that should be recommended for typically users
+it is not something that should be recommended for typical users
 (they should be able to use their browser normally).
+
+Another option for clearing the cache in a development environment is to do a hard refresh on the page. To do this open 
+developer tools (right-click and select **`inspect`**, or press **`F12`**), 
+then right click on the Reload button and select **`Empty Cache and Hard Reload`**, or if using Windows or Linux and
+not opening developer tools, hold down **`ctrl`** and press **`F5`** on the keyboard. On a Mac Hold **`⇧ Shift`** and 
+click the Reload button.
+
+![right click refresh](https://www.getfilecloud.com/blog/wp-content/uploads/2015/03/Hardrefresh-chrome.png)
 
 See [Options for Controlling Caching](#options-for-controlling-caching) to control caching behavior.
 
@@ -126,15 +160,44 @@ rather than changing in source code.
 Need to research whether cloud services like Amazon S3 have ways to configure rules
 for server-side caching.
 
+A possible solution might be found using [Amazon ElastiCache](https://aws.amazon.com/elasticache/)
+
 ## How Does Web Browser Caching Work? ##
 
-Need to document the fundamentals of how browser caching works, using general concepts and specifics
-from common web browsers.
+Web Caching is storing of HTTP responses temporarily for fast retrieval later on. Web Caching helps to
+optimize the user experience by using less bandwidth and reducing web server load time. Systems that 
+use web caching include Search Engines, Web Browsers, Content Delivery Networks and Web Proxies.
 
-* How does the browser check whether a new resource is available?
-* Does it rely only on the expiration time for the cached resource?
-* Or is there a way to do a two-pass check where the first pass is
-to get the header properties and if it is expired go get the full resource?
+The caching mechanism of these systems can be [controlled](#options-for-controlling-caching)
+using caching meta tags or HTTP caching headers.
+
+**Expiration Time for Caching:**  
+Once a resource is stored in a cache, it could theoretically be served by the cache forever. 
+Caches have finite storage so items are periodically removed from storage. This process is 
+called cache eviction. On the other side, some resources may change on the server so the cache 
+should be updated. As HTTP is a client-server protocol, servers can't contact caches and clients 
+when a resource changes; they have to communicate an expiration time for the resource. Before 
+this expiration time, the resource is fresh; after the expiration time, the resource is stale. 
+Eviction algorithms often privilege fresh resources over stale resources. Note that a stale 
+resource is not evicted or ignored; when the cache receives a request for a stale resource, 
+it forwards this request with a `If-None-Match` to check if it is in fact still fresh. 
+If so, the server returns a `304` (Not Modified) header without sending the body of the requested resource, 
+saving some bandwidth.
+
+expirationTime = responseTime + freshnessLifetime – currentAge
+
+The freshness lifetime is calculated based on several headers. If a "Cache-control: max-age=N" header is specified, 
+then the freshness lifetime is equal to N. If this header is not present, which is very often the case, then we look 
+for an "Expires" header. If an "Expires" header exists, then its value minus the value of the “Date” header determines 
+the freshness lifetime. Finally, if neither header is present, then we look for a "Last-Modified" header. If this 
+header is present, then the cache’s freshness lifetime is equal to the value of the "Date" header minus the value 
+of the "Last-modified" header divided by 10. If none of this headers are there then the response is not cached.
+
+responseTime is the time at which the response was received according to the client.
+
+The current age is usually close to zero, but is influenced by the presence of an Age header, which proxy caches may add to indicate the length of time a document has been sitting in its cache. The precise algorithm, which attempts avoid error resulting from clock skew, is described in [RFC 2616 section 13.2.3](https://tools.ietf.org/html/rfc2616#section-13.2.3).
+
+See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
 ## Options for Controlling Caching ##
 
