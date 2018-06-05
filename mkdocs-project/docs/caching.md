@@ -7,7 +7,8 @@
 * [Cloud Services](#cloud-services)
 * [How Does Web Browser Caching Work?](#how-does-web-browser-caching-work)
 * [Options for Controlling Caching](#options-for-controlling-caching)
-* [Options for Controlling Caching in Web Services](#options-for-controlling-caching-in-web-services-needs-further-research)
+* [Options for Controlling Caching in Web Services](#options-for-controlling-caching-in-web-services---needs-further-research)
+* [Resources](#resources)
 
 -------------
 
@@ -445,7 +446,7 @@ This content needs to be completed.
 * How to use pre-seeded caches to avoid latency.
 * How to use caching services such as [memcached](https://memcached.org/).
 
-### Resources ###
+## Resources ##
 Much of the information provided in this documentation is <a id="helloWorld">compiled</a> from the sources below:
 
 <a id="f1">[1]:</a> [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
