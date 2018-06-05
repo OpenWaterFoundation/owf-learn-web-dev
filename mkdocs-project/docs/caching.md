@@ -197,18 +197,16 @@ resource, saving some bandwidth.
 The **`freshnessLifetime`** is calculated based on several headers. If a `Cache-control: max-age=N` header 
 is specified, then the freshness lifetime is equal to N. If this header is not present, which is very 
 often the case, then we look for an `Expires` header. If an `Expires` header exists, then its value minus 
-the value of the “Date” header determines 
+the value of the `Date` header determines 
 the freshness lifetime. Finally, if neither header is present, then we look for a `Last-Modified` header. 
 If this header is present, then the cache’s freshness lifetime is equal to the value of the `Date` header 
-minus the value of the `Last-modified` header divided by 10. If none of this headers are there then the 
+minus the value of the `Last-modified` header divided by 10. If none of these headers are there then the 
 response is not cached.
 
 **`responseTime`** is the time at which the response was received according to the client.
 
 The **`currentAge`** is usually close to zero, but is influenced by the presence of an `Age` header, 
 which proxy caches may add to indicate the length of time a document has been sitting in its cache. 
-The precise algorithm, which attempts avoid error resulting from clock skew, 
-is described in [RFC 2616 section 13.2.3](https://tools.ietf.org/html/rfc2616#section-13.2.3). 
 <sup>[1](#user-content-f1)</sup>
 
 See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), 
@@ -228,15 +226,15 @@ Cache-Control was introduced in HTTP 1.1 whereas Expires header has introduced i
 So we must use both of them for better support of clients.
 
 #### Cacheability: ####
-* **`public`** - Indicates that the response may be cached by any cache. Gives a greater performance gain and a much 
-greater scalability gain. Client may receive cached copies, never having obtained the oirignal directly from 
+* **`public`** - Indicates that the response may be cached by any cache. This gives a greater performance gain and a much 
+greater scalability gain. The client may receive cached copies, never having obtained the original directly from 
 the server. 
 * **`private`** - Indicates that the response is intended for a single user (the client that the IP was created for) 
 and must not be stored by a shared (proxy server) cache. Generally this applies to a cache maintained by that client 
 itself.
 * **`no-cache`** - Systems will cache the response, but this forces caches to submit the request to the origin
 server for validation before releasing a cached copy.
-* **`only-if-cached`** - Indicates to not retrieve new data. This being the case, the server wishes the client to obtain
+* **`only-if-cached`** - Indicates not to retrieve new data. This being the case, the server wishes the client to obtain
 a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid
 contacting the origin-server to see if a newer copy exists.
 <sup>[1](#user-content-f1)</sup> <sup>[2](#user-content-f2)</sup> <sup>[3](#user-content-f3)</sup>
@@ -245,10 +243,10 @@ contacting the origin-server to see if a newer copy exists.
 * **`max-age=<seconds>`** - Specifies in seconds the maximum amount of time a resource will be considered fresh. 
 Contrary to `Expires`, this directive is relative to the time of the request. After the response has expired 
 it's deleted from the cache.
-* **`s-maxage=<seconds>`** - Overrides `max-age` or the `Expires` header, but it only applites to shared caches 
-(e.g. **proxies**) and is ingored by a private cache.
+* **`s-maxage=<seconds>`** - Overrides `max-age` or the `Expires` header, but it only applies to shared caches 
+(e.g. **proxies**) and is ignored by a private cache.
 * **`max-stale[=<seconds>]`** - Indicates that the client is willing to accept a response that has exceeded 
-its expiration time. Optionally, you can assign a value in seconds, indidcating the time the response must not be 
+its expiration time. Optionally, you can assign a value in seconds, indicating the time the response must not be 
 expired by.
 * **`min-fresh=<seconds>`** - Indicates that the client wants a response that will still be fresh at least 
 the specified number of seconds.
@@ -262,8 +260,8 @@ and is ignored by a private cache.
 * **`immutable`** - Indicates that the response body will not change over time. The resource, if unexpired, 
 is unchanged on the server and therefore the client should not send a conditional revalidation for it 
 (e.g. `If-None-Match` or `If-Modified-Since`) to check for updates, even when the user explicitly refreshes 
-the page. clinets that aren't aware of this extension must ignore them as per teh HTTP specification. In 
-Firefox, `immutable` is only honored on `https://` transactions. For more informaiton, see also this 
+the page. clients that aren't aware of this extension must ignore them as per the HTTP specification. In 
+Firefox, `immutable` is only honored on `https://` transactions. For more information, see also this 
 [blog post](http://bitsup.blogspot.com/2016/05/cache-control-immutable.html).
 <sup>[2](#user-content-f2)</sup>
 
@@ -277,7 +275,7 @@ or to reduce the amount of traffic on a slow link. The `no-transform` directive 
 
 #### Examples: ####
 Expires sets a future date and time that the response will be cached until. If assigned a past 
-time or `-1` then these systems do not cache the response. Here these systems will not cahce 
+time or `-1` then these systems do not cache the response. Here these systems will not cache
 the response:
 ```
 Expires:-1
@@ -290,15 +288,15 @@ This would be entered into an `.html` file as:
 ```
 
 Here these systems will cache the response but before serving the response the client will try to 
-revalidate but as we didn’t provide Last-Modified header, client will send revalidation request 
-without If-Modified-Since and therefore server will response with 200 status code which is 
-refetching the page again.
+revalidate but as there exists no `Last-Modified` header, the client will send revalidation request 
+without `If-Modified-Since` and therefore the server will responsd with `200` status code which is 
+refreshing the page again.
 ```
 Expires: Thu, 15 Aug 2060 09:00:00 GMT
 Cache-Control: no-cache, must-revalidate, expires=360000000
 ```
 
-Here browser will cache the document till 15 Aug 2015 09:00:00. Client will not revalidate the 
+Here the browser will cache the document until 15 Aug 2015 09:00:00. The client will not revalidate the 
 cache before serving.
 ```
 Expires: Thu, 15 Aug 2015 09:00:00 GMT
@@ -355,7 +353,8 @@ $.ajax({
   }
 });
 ```
-Cache-busting using Leaflet or Papaparse and `new Date().getTime()`:
+Other solutions using cache-busting can be seen below with examples from the JavaScript libraries, 
+Leaflet and Papaparse, in coordination with `new Date().getTime()`:
 ```javascript
 // Leaflet MapBox
 var mymap = L.map('mapbox').setView([40.5853, -105.0844], 13);
@@ -386,7 +385,7 @@ Papa.parse('stories.csv?=' + new Date().getTime(), {
 
 The `ETag` HTTP response header is an identifier for a specific version of a resource. It allows
 caches to be more efficient, and saves bandwidth, as a web server does not need to send a full
-response if the content has not changed. On the other side, if the content has changed, etags
+response if the content has not changed. On the other side, if the content has changed, ETags
 are useful to help prevent simultaneous updates of a resource from overwriting each other
 ("mid-air collisions").
 
@@ -422,10 +421,11 @@ See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 
 ### Meta Tags, ETags, or Cache-Busting? ###
 
-From research online there seems to be a fair amount of combining some meta tags with cache 
+From research online there seems to be a fair amount of combining meta tags with cache 
 busting techniques. 
-Meta tags offer the first level of specifying how and when resources should be reloaded and 
-when to discard what lies in the cache. To make sure different resources are being reloaded 
+Meta tags can specify how and when resources should be reloaded and 
+when to discard what lies in the cache. To increase assurance that different resources are 
+being reloaded 
 use cache busting techniques, such as adding file name extensions or editing the file names 
 to include random data. Between these two techniques there can be a fair level of certainty
 that resources will be reloaded appropriately.
@@ -468,5 +468,5 @@ Extra reading:
 * [AWS Caching Overview](https://aws.amazon.com/caching/)    
 * [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 
 * [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
-* [Strategies for Cache-Bustin CSS](https://css-tricks.com/strategies-for-cache-busting-css/)
+* [Strategies for Cache-Busting CSS](https://css-tricks.com/strategies-for-cache-busting-css/)
 * [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/)
