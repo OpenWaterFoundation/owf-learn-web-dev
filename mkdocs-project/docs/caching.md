@@ -118,7 +118,7 @@ In a local development website, such as a single-page web application, the `inde
 which contains `<script>` elements to import JavaScript libraries, CSS files, CSV data files, and other content.
 The `index.html` file is not cached, but other files are often cached.
 The web browser tracks filenames and content types and makes decisions about what to cache.
-The Chrome browser development tools ***Network*** displays the status of cached resources.
+The Chrome browser development tools **`Network`** displays the status of cached resources.
 
 Often, the normal web browser session will cache files, even if they have been changed.
 The Chrome "incognito" mode can be used to open a self-contained session that has a clean cache,
@@ -246,7 +246,7 @@ the specified number of seconds.
 #### Revalidation and Reloading: ####
 * **`must-revalidate`** - The cache must verify the status of the stale resources before using it and expired ones 
 should not be used.
-* **`proxy-revalidate`** - Same as `must-revalidate`, but it only applies to shared caches (e.g., **proxies**) 
+* **`proxy-revalidate`** - Same as `must-revalidate`, but it only applies to shared caches (e.g. **proxies**) 
 and is ignored by a private cache.
 * **`immutable`** - Indicates that the response body will not change over time. The resource, if unexpired, 
 is unchanged on the server and therefore the client should not send a conditional revalidation for it 
@@ -326,15 +326,50 @@ http://some-server/some-path/data-filename.csv?ver=1
 ```
 
 However, the above is really no better than adding a version number because the URL is static.
-Instead, the attached version should be dynamically formed, such as by using a random number or date/time.
+Instead, the attached version should be dynamically formed, such as by using a random number or date/time 
+(see example below).
 A random number could theoretically be encountered again, especially if the code logic is not robust.
 A date/time could be encountered again if the content is reloaded in a period that is shorter
 than the precision of the date/time, so date/time needs to be precise enough to ensure uniqueness.
 
+#### Examples: ####
 Common JavaScript libraries often provide a means to format such URLs dynamically through
 a `"cache=false"` mechanism, for example:
+```javascript
+$.ajax({
+  url:"path/to/file",
+  cache: false,
+  success:function(data){
+    //do something
+  }
+});
+```
+Cache-busting using Leaflet or Papaparse and `new Date().getTime()`:
+```javascript
+// Leaflet MapBox
+var mymap = L.map('mapbox').setView([40.5853, -105.0844], 13);
 
-* **Need to include some common examples here using jQuery, Papa Parse, Leaflet, etc.**
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}&{dateTime}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'your access token',
+    dateTime:  new Date().getTime()
+}).addTo(mymap);
+
+```
+```javascript
+//process csv file
+Papa.parse('stories.csv?=' + new Date().getTime(), {
+  header:true,
+  error:function(error){
+    throw new Error;
+  },
+  complete:function(results){
+    //do something here
+  }
+});
+```
 
 ### File Expiration Metadata ###
 
