@@ -264,6 +264,36 @@ transparent proxy might, for example, convert between image formats in order to 
 or to reduce the amount of traffic on a slow link. The `no-transform` directive disallows this.
 <sup>[2](#user-content-f2)</sup>
 
+#### Examples: ####
+Expires sets a future date and time that the response will be cached until. If assigned a past 
+time or `-1` then these systems do not cache the response. Here these systems will not cahce 
+the response:
+```
+Expires:-1
+Cache-Control: no-store
+```
+This would be entered into an `.html` file as:
+```html
+<meta http-equiv="Expires" content="-1"/>
+<meta http-equiv="Cache-Control" content="no-store"/>
+```
+
+Here these systems will cache the response but before serving the response the client will try to 
+revalidate but as we didn’t provide Last-Modified header, client will send revalidation request 
+without If-Modified-Since and therefore server will response with 200 status code which is 
+refetching the page again.
+```
+Expires: Thu, 15 Aug 2060 09:00:00 GMT
+Cache-Control: no-cache, must-revalidate, expires=360000000
+```
+
+Here browser will cache the document till 15 Aug 2015 09:00:00. Client will not revalidate the 
+cache before serving.
+```
+Expires: Thu, 15 Aug 2015 09:00:00 GMT
+Last-Modified: Thu, 15 Aug 2011 09:00:00 GMT
+```
+
 ### Unique Resource Name ###
 
 The simplest way to ensure proper caching is to name resources with a unique name.
@@ -331,7 +361,7 @@ This content needs to be completed.
 Much of the information provided in this documentation is <a id="helloWorld">compiled</a> from the sources below:
 
 <a id="f1">[1]:</a> [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
-<a id="f2">[2]:</a> [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
+<a id="f2">[2]:</a> [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
 <a id="f3">[3]:</a> [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
 [2]: [HTTP Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)  
 [3]: [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c)  
