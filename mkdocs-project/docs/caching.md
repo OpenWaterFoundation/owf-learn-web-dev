@@ -15,15 +15,15 @@
 ## Introduction ##
 
 Caching is an approach that is used to improve the user experience and
-increase efficiency in using computing resources.
-The basic concept is that when a resource such as web page content file or data resource needs to be used,
+increase efficiency in use of computing resources.
+The basic concept is that when a resource such as web page content, file, or data resource needs to be used,
 only retrieve the resource from the original source if a new version is available.
 Otherwise, use a cached (local copy) directly because the previous version has not changed.
 
 Caching is generally implemented in consuming applications such as web browsers,
 but not software that directly accesses data, such as file transfer tools like `ftp` and `curl`.
-Caching can be implemented at multiple levels, for example in database server, web server,
-web proxy server, web browser, although this documentation focuses on web browser caching.
+Caching can be implemented at multiple levels, for example in database servers, web servers,
+web proxy servers, web browsers. This documentation primarily focuses on web browser caching.
 
 Caching is generally good when it improves performance.  However, there are also trade-offs.
 For example, cached resources take hard-disk and memory space on the local device.
@@ -35,11 +35,11 @@ and users should be able to see such updates.
 
 The control of caching features in software
 can be controlled on the publishing and receiving end.
-For example, publishers of content can force caching to be disabled for some resources,
-for example, if those resources are expected to change very frequently.
+For example, publishers of content can force caching to be disabled for some resources 
+if those resources are expected to change very frequently.
 The control of caching should initially be configured by the publisher of content because
 they know more about the content.
-Default caching settings in web browsers may or may not be appropriate
+Default cache settings in web browsers may or may not be appropriate
 but in general asking users to change such things is probably inconvenient and may work against norms.
 
 The following sections present several common cases that illustrate caching issues.
@@ -64,11 +64,11 @@ manually clear the cache, etc.
 ## Static Website in Local Development Environment ##
 
 Development of web applications typically involves using a local development environment
-"sand box" where the application runs using a limited environment.
+("sand box") where the application runs using a limited environment.
 The more complex the software, the more complex the development environment needs to be.
 A simple example is to run a simple http server, such as Python server,
 to serve the files from the local file system,
-and view with a web browser using address such as `http://localhost:8000/index.html`,
+and view with a web browser using an address such as `http://localhost:8000/index.html`,
 in this case using port 8000 so as to minimize likelihood of conflicts with software using port 8000.
 
 A simple static website application (no server application other than web server for website files)
@@ -108,7 +108,7 @@ $(document).ready(function() {
 
 In all cases, the web developer must be able to effectively test the application during development
 with frequent changes to source files and data.
-Confusion about which version of code and data are used can waste time during development.
+Confusion about which version of code and data are being used can waste time during development.
 
 The development environment typically includes a way to run a local web server to serve the application files.
 If the application uses only core technologies (HTML, CSS, JavaScript), then it is convenient to
@@ -132,7 +132,7 @@ Another option for clearing the cache in a development environment is to do a ha
 To do this open developer tools (right-click and select **`inspect`**, or press **`F12`**), 
 then right click on the Reload button and select **`Empty Cache and Hard Reload`**, or if using 
 Windows or Linux and not opening developer tools, hold down **`ctrl`** and press **`F5`** on the keyboard. 
-On a Mac Hold **`⇧ Shift`** and click the Reload button.
+On a Mac Hold **`⇧ Shift`** and click the Reload button. Again, this is not an ideal solution to issues with caching.
 
 ![right click refresh](https://www.getfilecloud.com/blog/wp-content/uploads/2015/03/Hardrefresh-chrome.png)
 
@@ -151,6 +151,16 @@ Because the website deployment often uses an upload script,
 it is possible to dynamically change filenames to add a version.
 For example, it may be desirable to retain the names of software files in version control
 rather than changing in source code.
+
+Example:
+`.html` file
+```html
+<link rel="stylesheet" type="text/css" href="css/style.css">
+```
+filename after upload script is run:
+```html
+<link rel="stylesheet" type="text/css" href="css/style.20180509.css">
+```
 
 ## Cloud Services ##
 
@@ -459,4 +469,4 @@ Extra reading:
 * [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 
 * [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
 * [Strategies for Cache-Bustin CSS](https://css-tricks.com/strategies-for-cache-busting-css/)
-* [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/) - need HTML to always load so can determine other resources
+* [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/)
