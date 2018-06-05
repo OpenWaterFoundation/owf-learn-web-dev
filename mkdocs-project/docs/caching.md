@@ -127,11 +127,11 @@ Although incognito mode is useful to troubleshoot caching,
 it is not something that should be recommended for typical users
 (they should be able to use their browser normally).
 
-Another option for clearing the cache in a development environment is to do a hard refresh on the page. To do this open 
-developer tools (right-click and select **`inspect`**, or press **`F12`**), 
-then right click on the Reload button and select **`Empty Cache and Hard Reload`**, or if using Windows or Linux and
-not opening developer tools, hold down **`ctrl`** and press **`F5`** on the keyboard. On a Mac Hold **`⇧ Shift`** and 
-click the Reload button.
+Another option for clearing the cache in a development environment is to do a hard refresh on the page. 
+To do this open developer tools (right-click and select **`inspect`**, or press **`F12`**), 
+then right click on the Reload button and select **`Empty Cache and Hard Reload`**, or if using 
+Windows or Linux and not opening developer tools, hold down **`ctrl`** and press **`F5`** on the keyboard. 
+On a Mac Hold **`⇧ Shift`** and click the Reload button.
 
 ![right click refresh](https://www.getfilecloud.com/blog/wp-content/uploads/2015/03/Hardrefresh-chrome.png)
 
@@ -177,23 +177,31 @@ this expiration time, the resource is fresh; after the expiration time, the reso
 Eviction algorithms often privilege fresh resources over stale resources. Note that a stale 
 resource is not evicted or ignored; when the cache receives a request for a stale resource, 
 it forwards this request with a `If-None-Match` to check if it is in fact still fresh. 
-If so, the server returns a `304` (Not Modified) header without sending the body of the requested resource, 
-saving some bandwidth.
+If so, the server returns a `304` (Not Modified) header without sending the body of the requested 
+resource, saving some bandwidth. 
+<sup>[2](#user-content-f2)</sup>
 
-expirationTime = responseTime + freshnessLifetime – currentAge
+**`expirationTime = responseTime + freshnessLifetime – currentAge`**
 
-The freshness lifetime is calculated based on several headers. If a "Cache-control: max-age=N" header is specified, 
-then the freshness lifetime is equal to N. If this header is not present, which is very often the case, then we look 
-for an "Expires" header. If an "Expires" header exists, then its value minus the value of the “Date” header determines 
-the freshness lifetime. Finally, if neither header is present, then we look for a "Last-Modified" header. If this 
-header is present, then the cache’s freshness lifetime is equal to the value of the "Date" header minus the value 
-of the "Last-modified" header divided by 10. If none of this headers are there then the response is not cached.
+The **`freshnessLifetime`** is calculated based on several headers. If a `Cache-control: max-age=N` header 
+is specified, then the freshness lifetime is equal to N. If this header is not present, which is very 
+often the case, then we look for an `Expires` header. If an `Expires` header exists, then its value minus 
+the value of the “Date” header determines 
+the freshness lifetime. Finally, if neither header is present, then we look for a `Last-Modified` header. 
+If this header is present, then the cache’s freshness lifetime is equal to the value of the `Date` header 
+minus the value of the `Last-modified` header divided by 10. If none of this headers are there then the 
+response is not cached.
 
-responseTime is the time at which the response was received according to the client.
+**`responseTime`** is the time at which the response was received according to the client.
 
-The current age is usually close to zero, but is influenced by the presence of an Age header, which proxy caches may add to indicate the length of time a document has been sitting in its cache. The precise algorithm, which attempts avoid error resulting from clock skew, is described in [RFC 2616 section 13.2.3](https://tools.ietf.org/html/rfc2616#section-13.2.3). <sup>[1](#user-content-1)</sup>
+The **`currentAge`** is usually close to zero, but is influenced by the presence of an `Age` header, 
+which proxy caches may add to indicate the length of time a document has been sitting in its cache. 
+The precise algorithm, which attempts avoid error resulting from clock skew, 
+is described in [RFC 2616 section 13.2.3](https://tools.ietf.org/html/rfc2616#section-13.2.3). 
+<sup>[1](#user-content-f1)</sup>
 
-See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
+See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), 
+[HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
 ## Options for Controlling Caching ##
 
@@ -209,25 +217,52 @@ Cache-Control was introduced in HTTP 1.1 whereas Expires header has introduced i
 So we must use both of them for better support of clients.
 
 #### Cacheability: ####
-* **public** - Indicates that the response may be cached by any cache. Gives a greater performance gain and a much 
+* **`public`** - Indicates that the response may be cached by any cache. Gives a greater performance gain and a much 
 greater scalability gain. Client may receive cached copies, never having obtained the oirignal directly from 
-the server.
-* **private** - Indicates that the response is intended for a single user (the client that the IP was created for) 
+the server. 
+* **`private`** - Indicates that the response is intended for a single user (the client that the IP was created for) 
 and must not be stored by a shared (proxy server) cache. Generally this applies to a cache maintained by that client 
 itself.
-* **no-cache** - Forces caches to submit the request to the origin server for validation before releasing a cached
-copy.
-* **only-if-cached** - Indicates to not retrieve new data. This being the case, the server wishes the client to obtain
-a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid contacting
-the origin-server to see if a newer copy exists.
+* **`no-cache`** - Systems will cache the response, but this forces caches to submit the request to the origin
+server for validation before releasing a cached copy.
+* **`only-if-cached`** - Indicates to not retrieve new data. This being the case, the server wishes the client to obtain
+a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid
+contacting the origin-server to see if a newer copy exists.
+<sup>[1](#user-content-f1)</sup> <sup>[2](#user-content-f2)</sup> <sup>[3](#user-content-f3)</sup>
 
 #### Expiration: ####
-* **max-age=&lt;seconds&gt;** - Specifies the maximum amount of time a resource will be considered fresh. Contrary to
-`Expires`, this directive is relative to the time of the request.
-* **s-maxage=&lt;seconds&gt;** - Overrides `max-age` or the `Expires` header, but it only applites to shared caches 
-(e.g. proxies) and is ingored by a private cache.
-* **max-stale[=&lt;seconds&gt;]** - Indicates the client is willing to accept a response that has exceeded its expiration
-time. Optionally, you can assign a value in seconds, indidcating the response must not be expired by.
+* **`max-age=<seconds>`** - Specifies in seconds the maximum amount of time a resource will be considered fresh. 
+Contrary to `Expires`, this directive is relative to the time of the request. After the response has expired 
+it's deleted from the cache.
+* **`s-maxage=<seconds>`** - Overrides `max-age` or the `Expires` header, but it only applites to shared caches 
+(e.g. **proxies**) and is ingored by a private cache.
+* **`max-stale[=<seconds>]`** - Indicates that the client is willing to accept a response that has exceeded 
+its expiration time. Optionally, you can assign a value in seconds, indidcating the time the response must not be 
+expired by.
+* **`min-fresh=<seconds>`** - Indicates that the client wants a response that will still be fresh at least 
+the specified number of seconds.
+<sup>[1](#user-content-f1)</sup> <sup>[2](#user-content-f2)</sup>
+
+#### Revalidation and Reloading: ####
+* **`must-revalidate`** - The cache must verify the status of the stale resources before using it and expired ones 
+should not be used.
+* **`proxy-revalidate`** - Same as `must-revalidate`, but it only applies to shared caches (e.g., **proxies**) 
+and is ignored by a private cache.
+* **`immutable`** - Indicates that the response body will not change over time. The resource, if unexpired, 
+is unchanged on the server and therefore the client should not send a conditional revalidation for it 
+(e.g. `If-None-Match` or `If-Modified-Since`) to check for updates, even when the user explicitly refreshes 
+the page. clinets that aren't aware of this extension must ignore them as per teh HTTP specification. In 
+Firefox, `immutable` is only honored on `https://` transactions. For more informaiton, see also this 
+[blog post](http://bitsup.blogspot.com/2016/05/cache-control-immutable.html).
+<sup>[2](#user-content-f2)</sup>
+
+#### Other: ####
+* **`no-store`** - The cache should not store anything about the client request or server response.
+* **`no-transform`** - No transformations or conversions should be made to the resource. The 
+Content-Encoding, Content-Range, Content-Type headers must not be modified by a proxy. A non-
+transparent proxy might, for example, convert between image formats in order to save cache space 
+or to reduce the amount of traffic on a slow link. The `no-transform` directive disallows this.
+<sup>[2](#user-content-f2)</sup>
 
 ### Unique Resource Name ###
 
@@ -296,11 +331,12 @@ This content needs to be completed.
 Much of the information provided in this documentation is <a id="helloWorld">compiled</a> from the sources below:
 
 <a id="f1">[1]:</a> [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
+<a id="f2">[2]:</a> [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
+<a id="f3">[3]:</a> [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
 [2]: [HTTP Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)  
 [3]: [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c)  
-[4]: [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
 [5]: [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
-[6]: [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
+[6]: 
 
 Extra reading:
-* [AWS Caching Overview](https://aws.amazon.com/caching/)
+* [AWS Caching Overview](https://aws.amazon.com/caching/)    
