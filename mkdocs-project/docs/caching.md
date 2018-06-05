@@ -44,10 +44,6 @@ but in general asking users to change such things is probably inconvenient and m
 The following sections present several common cases that illustrate caching issues.
 Other sections describe technical details involved in overcoming caching issues.
 
-For extra reading see [AWS Caching Overview](https://aws.amazon.com/caching/), 
-[HTTP Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching), 
-or [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c).
-
 ## Caching General Goal ##
 
 The general goal of caching is to use a local copy of a resource first if it makes sense to do so.
@@ -169,7 +165,7 @@ optimize the user experience by using less bandwidth and reducing web server loa
 use web caching include Search Engines, Web Browsers, Content Delivery Networks and Web Proxies.
 
 The caching mechanism of these systems can be [controlled](#options-for-controlling-caching)
-using caching meta tags or HTTP caching headers.
+using caching meta tags or HTTP caching headers.<sup>[1](#user-content-f1)</sup>
 
 **Expiration Time for Caching:**  
 Once a resource is stored in a cache, it could theoretically be served by the cache forever. 
@@ -195,7 +191,7 @@ of the "Last-modified" header divided by 10. If none of this headers are there t
 
 responseTime is the time at which the response was received according to the client.
 
-The current age is usually close to zero, but is influenced by the presence of an Age header, which proxy caches may add to indicate the length of time a document has been sitting in its cache. The precise algorithm, which attempts avoid error resulting from clock skew, is described in [RFC 2616 section 13.2.3](https://tools.ietf.org/html/rfc2616#section-13.2.3).
+The current age is usually close to zero, but is influenced by the presence of an Age header, which proxy caches may add to indicate the length of time a document has been sitting in its cache. The precise algorithm, which attempts avoid error resulting from clock skew, is described in [RFC 2616 section 13.2.3](https://tools.ietf.org/html/rfc2616#section-13.2.3). <sup>[1](#user-content-1)</sup>
 
 See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
@@ -207,6 +203,31 @@ Background that may be useful:
 
 * [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/) - need HTML to always load so can determine other resources
 * [Strategies for Cache-Busting CSS](https://css-tricks.com/strategies-for-cache-busting-css/) - can also be applied to files other than CSS
+
+### Cache-Control Headers/Expires Headers (Meta Tags) ###
+Cache-Control was introduced in HTTP 1.1 whereas Expires header has introduced in HTTP 1.0. 
+So we must use both of them for better support of clients.
+
+#### Cacheability: ####
+* **public** - Indicates that the response may be cached by any cache. Gives a greater performance gain and a much 
+greater scalability gain. Client may receive cached copies, never having obtained the oirignal directly from 
+the server.
+* **private** - Indicates that the response is intended for a single user (the client that the IP was created for) 
+and must not be stored by a shared (proxy server) cache. Generally this applies to a cache maintained by that client 
+itself.
+* **no-cache** - Forces caches to submit the request to the origin server for validation before releasing a cached
+copy.
+* **only-if-cached** - Indicates to not retrieve new data. This being the case, the server wishes the client to obtain
+a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid contacting
+the origin-server to see if a newer copy exists.
+
+#### Expiration: ####
+* **max-age=&lt;seconds&gt;** - Specifies the maximum amount of time a resource will be considered fresh. Contrary to
+`Expires`, this directive is relative to the time of the request.
+* **s-maxage=&lt;seconds&gt;** - Overrides `max-age` or the `Expires` header, but it only applites to shared caches 
+(e.g. proxies) and is ingored by a private cache.
+* **max-stale[=&lt;seconds&gt;]** - Indicates the client is willing to accept a response that has exceeded its expiration
+time. Optionally, you can assign a value in seconds, indidcating the response must not be expired by.
 
 ### Unique Resource Name ###
 
@@ -270,3 +291,16 @@ This content needs to be completed.
 * How does this play with mime types?
 * How to use pre-seeded caches to avoid latency.
 * How to use caching services such as [memcached](https://memcached.org/).
+
+### Resources ###
+Much of the information provided in this documentation is <a id="helloWorld">compiled</a> from the sources below:
+
+<a id="f1">[1]:</a> [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
+[2]: [HTTP Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)  
+[3]: [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c)  
+[4]: [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
+[5]: [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
+[6]: [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
+
+Extra reading:
+* [AWS Caching Overview](https://aws.amazon.com/caching/)
