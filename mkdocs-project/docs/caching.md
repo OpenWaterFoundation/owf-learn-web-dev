@@ -7,7 +7,7 @@
 * [Cloud Services](#cloud-services)
 * [How Does Web Browser Caching Work?](#how-does-web-browser-caching-work)
 * [Options for Controlling Caching](#options-for-controlling-caching)
-* [Options for Controlling Caching in Web Services](#options-for-controlling-caching-in-web-services)
+* [Options for Controlling Caching in Web Services](#options-for-controlling-caching-in-web-services-needs-further-research)
 
 -------------
 
@@ -294,7 +294,7 @@ Expires: Thu, 15 Aug 2015 09:00:00 GMT
 Last-Modified: Thu, 15 Aug 2011 09:00:00 GMT
 ```
 
-### Unique Resource Name ###
+### Unique Resource Name (Cache-Busting) ###
 
 The simplest way to ensure proper caching is to name resources with a unique name.
 For example, if using a JavaScript library and its accompanying CSS file, make sure to name
@@ -311,7 +311,7 @@ Deployment tools in development environments may have options to do this.
 Because the resource name does not change in a non-deployed local development environment,
 it may be necessary to use Chrome incognito mode (or similar tool) during development.
 
-### Query Parameter on Resource Name ###
+### Query Parameter on Resource Name (Cache-Busting) ###
 
 Changing the resource name by changing the resource filename may not be possible in all cases.
 For example, an application may rely on a dynamic data file that is read using an Ajax approach.
@@ -371,19 +371,72 @@ Papa.parse('stories.csv?=' + new Date().getTime(), {
 });
 ```
 
-### File Expiration Metadata ###
+### ETags ###
+
+The `ETag` HTTP response header is an identifier for a specific version of a resource. It allows
+caches to be more efficient, and saves bandwidth, as a web server does not need to send a full
+response if the content has not changed. On the other side, if the content has changed, etags
+are useful to help prevent simultaneous updates of a resource from overwriting each other
+("mid-air collisions").
+
+If the resource at a given URL changes, a new `ETag` value must be generated. Etags are therefore
+similar to fingerprints and might also be used for tracking purposes by some servers. A comparison
+of them allows to quickly determine whether two representations of a resource are the same,
+but they might also be set to persist indefinitely by a tracking server. 
+<sup>[4](#user-content-f4)</sup>
+
+**Syntax:**
+```
+ETag: W/"<etag_value>"
+ETag: "<etag_value>"
+```
+
+**Directives:**
+* **`W/`** - (optional) `'W/'` (case-sensitive) indicates that a weak validator is used. Weak 
+validators are easy to generate but are far less useful for comparisons. Strong validators are 
+ideal for comparisons but can be very difficult to generate efficiently. Weak Etag values of 
+two representations of the same resources might be semantically equivalent, but not byte-for-byte 
+identical.
+* **`<etag_value>`** - Entity tags uniquely representing the requested resources. They are a 
+string of ASCII characters placed between double quotes (Like `"675af34563dc-tr34"`). The method 
+by which `ETag` values are generated is not specified. Oftentimes, a hash of the content, a hash 
+of the last modification timestamp, or just a revision number is used. For example, MDN uses a 
+hash of hexadecimal digits of the wiki content.
+<sup>[4](#user-content-f4)</sup>
+
+See this [Stackoverflow](https://stackoverflow.com/questions/162105/whats-the-best-way-to-create-an-etag) 
+for different advice on creating an ETag.
+
+See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
+
+### Meta Tags, ETags, or Cache-Busting? ###
+
+From research online there seems to be a fair amount of combining some meta tags with cache 
+busting techniques. 
+Meta tags offer the first level of specifying how and when resources should be reloaded and 
+when to discard what lies in the cache. To make sure different resources are being reloaded 
+use cache busting techniques, such as adding file name extensions or editing the file names 
+to include random data. Between these two techniques there can be a fair level of certainty
+that resources will be reloaded appropriately.
+
+From this [article](https://css-tricks.com/strategies-for-cache-busting-css/) it seems that 
+using ETags may not be the best solution in general. There is a quote from Yahoo which [says](https://developer.yahoo.com/performance/rules.html):
+
+>The problem with ETags is that they typically are constructed using attributes that make them 
+unique to a specific server hosting a site. ETags won't match when a browser gets the original 
+component from one server and later tries to validate that component on a different server, a 
+situation that is all too common on Web sites that use a cluster of servers to handle requests.
+
+### File Expiration Metadata - Needs Further Research ###
 
 It is also possible to format file content with metadata to control caching.
 **Need to describe here.**
 
-* Whate file types?
-* When to use rather than the previous sections.
-* HTML `<meta>` tag.
+* What file types?
 * HTML `<file>` tag?
-* Best practices for `Last-Modified` and `ETag`, etc.
 * How are images and other files handled?
 
-## Options for Controlling Caching in Web Services ##
+## Options for Controlling Caching in Web Services - Needs Further Research ##
 
 This content needs to be completed.
 
@@ -398,10 +451,10 @@ Much of the information provided in this documentation is <a id="helloWorld">com
 <a id="f1">[1]:</a> [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
 <a id="f2">[2]:</a> [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
 <a id="f3">[3]:</a> [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
-[2]: [HTTP Caching](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)  
-[3]: [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c)  
-[5]: [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
-[6]: 
+<a id="f4">[4]:</a> [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
 
 Extra reading:
 * [AWS Caching Overview](https://aws.amazon.com/caching/)    
+* [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 
+* [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
+* [Strategies for Cache-Bustin CSS](https://css-tricks.com/strategies-for-cache-busting-css/)
