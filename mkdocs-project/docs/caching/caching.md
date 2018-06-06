@@ -29,9 +29,9 @@ Caching is generally good when it improves performance.  However, there are also
 For example, cached resources take hard-disk and memory space on the local device.
 Therefore, the cache will fill up at some point and cached resources will be recycled.
 Perhaps more important is to ensure that the caching mechanism does not result in
-a user of information seeing old cached versions when there are new versions available.
+a consuming application (or person) seeing old cached versions when there are new versions available.
 For example, the developers of a web application may release a new software version or new content
-and users should be able to see such updates.
+and users should be able to see such updates without having to clear the cache or do other extra tasks.
 
 The control of caching features in software
 can be controlled on the publishing and receiving end.
@@ -69,14 +69,15 @@ The more complex the software, the more complex the development environment need
 A simple example is to run a simple http server, such as Python server,
 to serve the files from the local file system,
 and view with a web browser using an address such as `http://localhost:8000/index.html`,
-in this case using port 8000 so as to minimize likelihood of conflicts with software using port 8000.
+in this case using port 8000 so as to minimize likelihood of conflicts with software using
+other ports for http traffic.
 
 A simple static website application (no server application other than web server for website files)
 may involve only HTML, CSS, JavaScript, and data files, such as
-comma-separated-value data and GeoJSON files visualization.
+comma-separated-value (CSV) data ifles and GeoJSON spatial data files.
 The web application may access data resources in several ways:
 
-* Use the URL for a data file directly, such as a relative path URL with files found in the website file tree.   
+* Use the URL for a data file directly, such as a relative path URL with files found in the website file hierarchy.   
 ```html 
 <link rel="stylesheet" href="relative/file/path.css" />
 <script src="relative/file/path.js"></script>
@@ -119,7 +120,12 @@ In a local development website, such as a single-page web application, the `inde
 which contains `<script>` elements to import JavaScript libraries, CSS files, CSV data files, and other content.
 The `index.html` file is not cached, but other files are often cached.
 The web browser tracks filenames and content types and makes decisions about what to cache.
-The Chrome browser development tools **`Network`** displays the status of cached resources.
+The Chrome browser development tools ***Network*** displays the status of cached resources, as shown below
+(<a href="../images/chrome-dev-tools-network.png">see also the full-size image</a>).
+The ***Size*** column will indicate whether a resource was loaded from memory or file cache,
+or retrieved from the source.
+
+![chrome-dev-tools-network](images/chrome-dev-tools-network.png)
 
 Often, the normal web browser session will cache files, even if they have been changed.
 The Chrome "incognito" mode can be used to open a self-contained session that has a clean cache,
@@ -129,10 +135,10 @@ it is not something that should be recommended for typical users
 (they should be able to use their browser normally).
 
 Another option for clearing the cache in a development environment is to do a hard refresh on the page. 
-To do this open developer tools (right-click and select **`inspect`**, or press **`F12`**), 
-then right click on the Reload button and select **`Empty Cache and Hard Reload`**, or if using 
-Windows or Linux and not opening developer tools, hold down **`ctrl`** and press **`F5`** on the keyboard. 
-On a Mac Hold **`⇧ Shift`** and click the Reload button. Again, this is not an ideal solution to issues with caching.
+To do this open developer tools (right-click and select ***Inspect***, or press ***F12***), 
+then right click on the ***Reload*** button and select ***Empty Cache and Hard Reload***, or if using 
+Windows or Linux and not opening developer tools, hold down ***ctrl*** and press ***F5*** on the keyboard. 
+On a Mac Hold ***⇧ Shift*** and click the Reload button. Again, this is not an ideal solution to issues with caching.
 
 ![right click refresh](https://www.getfilecloud.com/blog/wp-content/uploads/2015/03/Hardrefresh-chrome.png)
 
@@ -152,12 +158,12 @@ it is possible to dynamically change filenames to add a version.
 For example, it may be desirable to retain the names of software files in version control
 rather than changing in source code.
 
-Example:
+Example local files:
 `.html` file
 ```html
 <link rel="stylesheet" type="text/css" href="css/style.css">
 ```
-filename after upload script is run:
+Example filename after upload script is run and changes the filename and reference:
 ```html
 <link rel="stylesheet" type="text/css" href="css/style.20180509.css">
 ```
@@ -167,11 +173,12 @@ filename after upload script is run:
 Need to research whether cloud services like Amazon S3 have ways to configure rules
 for server-side caching.
 
-A possible solution might be found using [Amazon ElastiCache](https://aws.amazon.com/elasticache/)
+A possible solution to server-side caching to increase performance
+might be [Amazon ElastiCache](https://aws.amazon.com/elasticache/).
 
 ## How Does Web Browser Caching Work? ##
 
-Web Caching is storing of HTTP responses temporarily for fast retrieval later on. Web Caching helps to
+Web caching is storing of HTTP responses temporarily for fast retrieval later on. Web caching helps to
 optimize the user experience by using less bandwidth and reducing web server load time. Systems that 
 use web caching include Search Engines, Web Browsers, Content Delivery Networks and Web Proxies.
 
@@ -196,11 +203,11 @@ resource, saving some bandwidth.
 
 The **`freshnessLifetime`** is calculated based on several headers. If a `Cache-control: max-age=N` header 
 is specified, then the freshness lifetime is equal to N. If this header is not present, which is very 
-often the case, then we look for an `Expires` header. If an `Expires` header exists, then its value minus 
+often the case, then an `Expires` header is checked. If an `Expires` header exists, then its value minus 
 the value of the `Date` header determines 
-the freshness lifetime. Finally, if neither header is present, then we look for a `Last-Modified` header. 
+the freshness lifetime. Finally, if neither header is present, then `Last-Modified` header is checked. 
 If this header is present, then the cache’s freshness lifetime is equal to the value of the `Date` header 
-minus the value of the `Last-modified` header divided by 10. If none of these headers are there then the 
+minus the value of the `Last-modified` header divided by 10. If none of these headers are present then the 
 response is not cached.
 
 **`responseTime`** is the time at which the response was received according to the client.
@@ -209,7 +216,7 @@ The **`currentAge`** is usually close to zero, but is influenced by the presence
 which proxy caches may add to indicate the length of time a document has been sitting in its cache. 
 <sup>[1](#user-content-f1)</sup>
 
-See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), 
+See also [How Web Caching Works](http://qnimate.com/all-about-web-caching/), 
 [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
 ## Options for Controlling Caching ##
@@ -223,7 +230,7 @@ Background that may be useful:
 
 ### Cache-Control Headers/Expires Headers (Meta Tags) ###
 Cache-Control was introduced in HTTP 1.1 whereas Expires header has introduced in HTTP 1.0. 
-So we must use both of them for better support of clients.
+So both must be used for better support of clients.
 
 #### Cacheability: ####
 * **`public`** - Indicates that the response may be cached by any cache. This gives a greater performance gain and a much 
@@ -353,8 +360,7 @@ $.ajax({
   }
 });
 ```
-Other solutions using cache-busting can be seen below with examples from the JavaScript libraries, 
-Leaflet and Papaparse, in coordination with `new Date().getTime()`:
+The following Leaflet example uses `new Date().getTime()` to force always reading a resource:
 ```javascript
 // Leaflet MapBox
 var mymap = L.map('mapbox').setView([40.5853, -105.0844], 13);
@@ -368,6 +374,8 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(mymap);
 
 ```
+Similarly, the following avoids caching by using a query parameter based on current time.
+
 ```javascript
 //process csv file
 Papa.parse('stories.csv?=' + new Date().getTime(), {
@@ -380,6 +388,22 @@ Papa.parse('stories.csv?=' + new Date().getTime(), {
   }
 });
 ```
+### Use Timestamp File Resource ###
+
+It may make sense to use a file resource to indicate a timestamp,
+in particular for static website files.
+For example, create two files:
+
+* `product1-timestamp.txt` - a file containing only a timestamp such as milliseconds or date/time string that
+can be used in a URL query parameter
+* `product1.xxx` - the data product (file extension would be appropriate for file type)
+
+The web application code that uses the product can use a no-cache request for `product-timestamp.txt`.
+The contents of the file can the be used in an Ajax query of `product.xxx?version=timestamp`.
+If the timestamp is newer than the previous request, the resource will be retrieved from the source.
+Otherwise, the cached version will be retrieved.
+
+This approach may be appropriate when an automated process creates content - both files can be created by the process.
 
 ### ETags ###
 
@@ -391,7 +415,7 @@ are useful to help prevent simultaneous updates of a resource from overwriting e
 
 If the resource at a given URL changes, a new `ETag` value must be generated. Etags are therefore
 similar to fingerprints and might also be used for tracking purposes by some servers. A comparison
-of them allows to quickly determine whether two representations of a resource are the same,
+of Etags allows quick evaluation of whether two representations of a resource are the same,
 but they might also be set to persist indefinitely by a tracking server. 
 <sup>[4](#user-content-f4)</sup>
 
@@ -415,7 +439,7 @@ hash of hexadecimal digits of the wiki content.
 <sup>[4](#user-content-f4)</sup>
 
 See this [Stackoverflow](https://stackoverflow.com/questions/162105/whats-the-best-way-to-create-an-etag) 
-for different advice on creating an ETag.
+for advice on creating an ETag.
 
 See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
 
@@ -465,6 +489,7 @@ Much of the information provided in this documentation is <a id="helloWorld">com
 <a id="f4">[4]:</a> [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
 
 Extra reading:
+
 * [AWS Caching Overview](https://aws.amazon.com/caching/)    
 * [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 
 * [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  

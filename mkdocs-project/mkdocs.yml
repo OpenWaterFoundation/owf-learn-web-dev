@@ -8,7 +8,7 @@ pages:
 - Overview: overview.md
 - Development Tools: dev-tools.md
 - Frameworks: frameworks.md
-- Caching: caching.md
+- Caching: caching/caching.md
 - CORS: cors.md
 - Authentication and Security: authentication.md
 - Cloud Platforms: cloud-platforms.md
