@@ -183,7 +183,9 @@ optimize the user experience by using less bandwidth and reducing web server loa
 use web caching include Search Engines, Web Browsers, Content Delivery Networks and Web Proxies.
 
 The caching mechanism of these systems can be [controlled](#options-for-controlling-caching)
-using caching meta tags or HTTP caching headers.<sup>[1](#user-content-f1)</sup>
+using caching meta tags or HTTP caching headers.
+
+See [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
 
 **Expiration Time for Caching:**  
 Once a resource is stored in a cache, it could theoretically be served by the cache forever. 
@@ -197,7 +199,6 @@ resource is not evicted or ignored; when the cache receives a request for a stal
 it forwards this request with a `If-None-Match` to check if it is in fact still fresh. 
 If so, the server returns a `304` (Not Modified) header without sending the body of the requested 
 resource, saving some bandwidth. 
-<sup>[2](#user-content-f2)</sup>
 
 **`expirationTime = responseTime + freshnessLifetime – currentAge`**
 
@@ -213,8 +214,7 @@ response is not cached.
 **`responseTime`** is the time at which the response was received according to the client.
 
 The **`currentAge`** is usually close to zero, but is influenced by the presence of an `Age` header, 
-which proxy caches may add to indicate the length of time a document has been sitting in its cache. 
-<sup>[1](#user-content-f1)</sup>
+which proxy caches may add to indicate the length of time a document has been sitting in its cache.  
 
 See also [How Web Caching Works](http://qnimate.com/all-about-web-caching/), 
 [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
@@ -244,7 +244,6 @@ server for validation before releasing a cached copy.
 * **`only-if-cached`** - Indicates not to retrieve new data. This being the case, the server wishes the client to obtain
 a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid
 contacting the origin-server to see if a newer copy exists.
-<sup>[1](#user-content-f1)</sup> <sup>[2](#user-content-f2)</sup> <sup>[3](#user-content-f3)</sup>
 
 #### Expiration: ####
 * **`max-age=<seconds>`** - Specifies in seconds the maximum amount of time a resource will be considered fresh. 
@@ -257,7 +256,6 @@ its expiration time. Optionally, you can assign a value in seconds, indicating t
 expired by.
 * **`min-fresh=<seconds>`** - Indicates that the client wants a response that will still be fresh at least 
 the specified number of seconds.
-<sup>[1](#user-content-f1)</sup> <sup>[2](#user-content-f2)</sup>
 
 #### Revalidation and Reloading: ####
 * **`must-revalidate`** - The cache must verify the status of the stale resources before using it and expired ones 
@@ -270,7 +268,7 @@ is unchanged on the server and therefore the client should not send a conditiona
 the page. clients that aren't aware of this extension must ignore them as per the HTTP specification. In 
 Firefox, `immutable` is only honored on `https://` transactions. For more information, see also this 
 [blog post](http://bitsup.blogspot.com/2016/05/cache-control-immutable.html).
-<sup>[2](#user-content-f2)</sup>
+
 
 #### Other: ####
 * **`no-store`** - The cache should not store anything about the client request or server response.
@@ -278,7 +276,42 @@ Firefox, `immutable` is only honored on `https://` transactions. For more inform
 Content-Encoding, Content-Range, Content-Type headers must not be modified by a proxy. A non-
 transparent proxy might, for example, convert between image formats in order to save cache space 
 or to reduce the amount of traffic on a slow link. The `no-transform` directive disallows this.
-<sup>[2](#user-content-f2)</sup>
+
+### Default Cache-Control Headers ###
+It seems that the default for Cache-Control headers is: **private**
+
+See [What's default value of cache control](https://stackoverflow.com/a/14497736/9277979)
+
+### Setting Headers Using .htaccess ###
+`.htaccess` is the easiest way to set headers for your site. A basic example of a `.htaccess`
+file is: 
+```.htaccess
+Header set Cache-control "max-age=262000, public"
+```
+
+Below is how to set Cache-Control headers for different file types. "If the file type is css,
+jpeg, jpg, png, gif, js, or ico then apply the following header to it.":
+```.htaccess
+#One month for most static assets
+<filesMatch ".(css|jpg|jpeg|png|gif|js|ico)$">
+Header set Cache-Control "max-age=262000, public"
+</filesMatch>
+```
+
+This next example shows how to cache images for a year, but keep css and js files for a month.
+```.htaccess
+#One year for image files
+<filesMatch ".(jpg|jpeg|png|gif|ico)$">
+Header set Cache-Control "max-age=31536000, public"
+</filesMatch>
+
+#One month for css and js
+<filesMatch ".(css|js)$">
+Header set Cache-Control "max-age=2628000, public"
+</filesMatch>
+```
+
+See [Cache Control](https://varvy.com/pagespeed/cache-control.html)
 
 #### Examples: ####
 Expires sets a future date and time that the response will be cached until. If assigned a past 
@@ -309,6 +342,13 @@ cache before serving.
 Expires: Thu, 15 Aug 2015 09:00:00 GMT
 Last-Modified: Thu, 15 Aug 2011 09:00:00 GMT
 ```
+
+To see what headers are set for a given site open developer tools (***right click*** -> ***Inspect*** or ***F12***),
+click on ***Network***, select the file you want to view, and click ***Headers***.
+
+![headers in developer mode](https://i.stack.imgur.com/1dolH.png)
+
+See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching), [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)
 
 ### Unique Resource Name (Cache-Busting) ###
 
@@ -417,7 +457,6 @@ If the resource at a given URL changes, a new `ETag` value must be generated. Et
 similar to fingerprints and might also be used for tracking purposes by some servers. A comparison
 of Etags allows quick evaluation of whether two representations of a resource are the same,
 but they might also be set to persist indefinitely by a tracking server. 
-<sup>[4](#user-content-f4)</sup>
 
 **Syntax:**
 ```
@@ -436,10 +475,10 @@ string of ASCII characters placed between double quotes (Like `"675af34563dc-tr3
 by which `ETag` values are generated is not specified. Oftentimes, a hash of the content, a hash 
 of the last modification timestamp, or just a revision number is used. For example, MDN uses a 
 hash of hexadecimal digits of the wiki content.
-<sup>[4](#user-content-f4)</sup>
 
 See this [Stackoverflow](https://stackoverflow.com/questions/162105/whats-the-best-way-to-create-an-etag) 
 for advice on creating an ETag.
+See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
 
 See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
 
@@ -481,12 +520,13 @@ This content needs to be completed.
 * How to use caching services such as [memcached](https://memcached.org/).
 
 ## Resources ##
-Much of the information provided in this documentation is <a id="helloWorld">compiled</a> from the sources below:
+Much of the information provided in this documentation is compiled from the sources below:
 
-<a id="f1">[1]:</a> [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
-<a id="f2">[2]:</a> [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
-<a id="f3">[3]:</a> [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
-<a id="f4">[4]:</a> [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
+* [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
+* [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
+* [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
+* [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
+* [Cache Control](https://varvy.com/pagespeed/cache-control.html)
 
 Extra reading:
 
