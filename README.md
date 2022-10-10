@@ -1,12 +1,12 @@
 # owf-learn-web-dev #
 
-This repository contains the [Open Water Foundation (OWF)](http://openwaterfoundation.org/)
+This repository contains the [Open Water Foundation (OWF)](https://openwaterfoundation.org/)
 web development training materials,
 which provides guidance for developing web applications.
 The documentation is written for software developers in order to encourage 
 understanding and development of web technologies.
 
-See the deployed [OWF / Learn Web Development ](http://learn.openwaterfoundation.org/owf-learn-web-dev/) documentation.
+See the deployed [OWF / Learn Web Development ](https://learn.openwaterfoundation.org/owf-learn-web-dev/) documentation.
 
 ## Repository Contents ##
 
@@ -53,7 +53,7 @@ Contribute to the documentation as follows:
 
 ## Maintainers ##
 
-This repository is maintained by the [Open Water Foundation](http://openwaterfoundation.org/).
+This repository is maintained by the [Open Water Foundation](https://openwaterfoundation.org/).
 
 ## Contributors ##
 
