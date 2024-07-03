@@ -1,14 +1,14 @@
-# Learn Web Development / Caching
+# Learn Web Development / Caching #
 
-* [Introduction](#introduction)
-* [Caching General Goal](#caching-general-goal)
-* [Static Website in Local Development Environment](#static-website-in-local-development-environment)
-* [Deployed Static Website](#deployed-static-website)
-* [Cloud Services](#cloud-services)
-* [How Does Web Browser Caching Work?](#how-does-web-browser-caching-work)
-* [Options for Controlling Caching](#options-for-controlling-caching)
-* [Options for Controlling Caching in Web Services](#options-for-controlling-caching-in-web-services---needs-further-research)
-* [Resources](#resources)
+*   [Introduction](#introduction)
+*   [Caching General Goal](#caching-general-goal)
+*   [Static Website in Local Development Environment](#static-website-in-local-development-environment)
+*   [Deployed Static Website](#deployed-static-website)
+*   [Cloud Services](#cloud-services)
+*   [How Does Web Browser Caching Work?](#how-does-web-browser-caching-work)
+*   [Options for Controlling Caching](#options-for-controlling-caching)
+*   [Options for Controlling Caching in Web Services](#options-for-controlling-caching-in-web-services---needs-further-research)
+*   [Resources](#resources)
 
 -------------
 
@@ -35,7 +35,7 @@ and users should be able to see such updates without having to clear the cache o
 
 The control of caching features in software
 can be controlled on the publishing and receiving end.
-For example, publishers of content can force caching to be disabled for some resources 
+For example, publishers of content can force caching to be disabled for some resources
 if those resources are expected to change very frequently.
 The control of caching should initially be configured by the publisher of content because
 they know more about the content.
@@ -51,15 +51,15 @@ The general goal of caching is to use a local copy of a resource first if it mak
 This minimizes computational resources such as internet travel-time, performance time,
 cost of cloud services, etc.
 
-* If the original version of a resource is newer than the cached version,
-the web application should retrieve the newer remote resource and use it.
-* The expiration time of published resources should be accurately represented so that the time
-can be used by caching features.
-* Behavior of software such as web browsers should automatically and appropriately
-handle caching so that the user experience is "seamless".
-For example, deployment of new static website content or web services data should
-be recognized by the web browser without having to refresh a browser page, run in "incognito mode",
-manually clear the cache, etc.
+*   If the original version of a resource is newer than the cached version,
+    the web application should retrieve the newer remote resource and use it.
+*   The expiration time of published resources should be accurately represented so that the time
+    can be used by caching features.
+*   Behavior of software such as web browsers should automatically and appropriately
+    handle caching so that the user experience is "seamless".
+    For example, deployment of new static website content or web services data should
+    be recognized by the web browser without having to refresh a browser page, run in "incognito mode",
+    manually clear the cache, etc.
 
 ## Static Website in Local Development Environment ##
 
@@ -77,35 +77,42 @@ may involve only HTML, CSS, JavaScript, and data files, such as
 comma-separated-value (CSV) data ifles and GeoJSON spatial data files.
 The web application may access data resources in several ways:
 
-* Use the URL for a data file directly, such as a relative path URL with files found in the website file hierarchy.   
-```html 
-<link rel="stylesheet" href="relative/file/path.css" />
-<script src="relative/file/path.js"></script>
-```
-* Pass the URL of a data file to a JavaScript library, such as Leaflet web mapping URL for a map layer.
-```html
-<script>
-  L.tileLayer('https://api.tiles.mapbox.com/data/file', {}).addTo(mymap);
-</script>
-```
-* Use the URL of remote resource, such as including in an
-[HTML `<iframe>`](https://www.w3schools.com/tags/tag_iframe.asp).
-```html
-<iframe data-src="http://viz.openwaterfoundation.org/co/owf-viz-co-snodas-gapminder/" scrolling="no" frameborder="0"></iframe>
-```
-* Use [Ajax](https://www.w3schools.com/xml/ajax_intro.asp) approach and `XmlHttpRequest` function
-to read a data file or web service output from the same or different server.
-This approach is often encapsulated in library functions that read data.
-```javascript
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: "data.txt",
-        dataType: "text",
-        success: function(data) {processData(data);}
-     });
-});
-```
+*   Use the URL for a data file directly, such as a relative path URL with files found in the website file hierarchy.
+
+    ```html
+    <link rel="stylesheet" href="relative/file/path.css" />
+    <script src="relative/file/path.js"></script>
+    ```
+
+*   Pass the URL of a data file to a JavaScript library, such as Leaflet web mapping URL for a map layer.
+
+    ```html
+    <script>
+      L.tileLayer('https://api.tiles.mapbox.com/data/file', {}).addTo(mymap);
+    </script>
+    ```
+
+*   Use the URL of remote resource, such as including in an
+    [HTML `<iframe>`](https://www.w3schools.com/tags/tag_iframe.asp).
+
+    ```html
+    <iframe data-src="http://viz.openwaterfoundation.org/co/owf-viz-co-snodas-gapminder/" scrolling="no" frameborder="0"></iframe>
+    ```
+
+*   Use [Ajax](https://www.w3schools.com/xml/ajax_intro.asp) approach and `XmlHttpRequest` function
+    to read a data file or web service output from the same or different server.
+    This approach is often encapsulated in library functions that read data.
+
+    ```javascript
+    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: "data.txt",
+            dataType: "text",
+            success: function(data) {processData(data);}
+         });
+    });
+    ```
 
 In all cases, the web developer must be able to effectively test the application during development
 with frequent changes to source files and data.
@@ -120,12 +127,17 @@ In a local development website, such as a single-page web application, the `inde
 which contains `<script>` elements to import JavaScript libraries, CSS files, CSV data files, and other content.
 The `index.html` file is not cached, but other files are often cached.
 The web browser tracks filenames and content types and makes decisions about what to cache.
-The Chrome browser development tools ***Network*** displays the status of cached resources, as shown below
-(<a href="../images/chrome-dev-tools-network.png">see also the full-size image</a>).
+The Chrome browser development tools ***Network*** displays the status of cached resources, as shown below.
 The ***Size*** column will indicate whether a resource was loaded from memory or file cache,
 or retrieved from the source.
 
-![chrome-dev-tools-network](images/chrome-dev-tools-network.png)
+**<p style="text-align: center;">
+![chrome dev tools network](images/chrome-dev-tools-network.png)
+</p>**
+
+**<p style="text-align: center;">
+Chrome Network Resource Information (<a href="../images/chrome-dev-tools-network.png">see full-size image</a>)
+</p>**
 
 Often, the normal web browser session will cache files, even if they have been changed.
 The Chrome "incognito" mode can be used to open a self-contained session that has a clean cache,
@@ -134,10 +146,10 @@ Although incognito mode is useful to troubleshoot caching,
 it is not something that should be recommended for typical users
 (they should be able to use their browser normally).
 
-Another option for clearing the cache in a development environment is to do a hard refresh on the page. 
-To do this open developer tools (right-click and select ***Inspect***, or press ***F12***), 
-then right click on the ***Reload*** button and select ***Empty Cache and Hard Reload***, or if using 
-Windows or Linux and not opening developer tools, hold down ***ctrl*** and press ***F5*** on the keyboard. 
+Another option for clearing the cache in a development environment is to do a hard refresh on the page.
+To do this open developer tools (right-click and select ***Inspect***, or press ***F12***),
+then right click on the ***Reload*** button and select ***Empty Cache and Hard Reload***, or if using
+Windows or Linux and not opening developer tools, hold down ***ctrl*** and press ***F5*** on the keyboard.
 On a Mac Hold ***⇧ Shift*** and click the Reload button. Again, this is not an ideal solution to issues with caching.
 
 ![right click refresh](https://www.getfilecloud.com/blog/wp-content/uploads/2015/03/Hardrefresh-chrome.png)
@@ -159,11 +171,15 @@ For example, it may be desirable to retain the names of software files in versio
 rather than changing in source code.
 
 Example local files:
-`.html` file
+
+`.html` file:
+
 ```html
 <link rel="stylesheet" type="text/css" href="css/style.css">
 ```
+
 Example filename after upload script is run and changes the filename and reference:
+
 ```html
 <link rel="stylesheet" type="text/css" href="css/style.20180509.css">
 ```
@@ -179,44 +195,44 @@ might be [Amazon ElastiCache](https://aws.amazon.com/elasticache/).
 ## How Does Web Browser Caching Work? ##
 
 Web caching is storing of HTTP responses temporarily for fast retrieval later on. Web caching helps to
-optimize the user experience by using less bandwidth and reducing web server load time. Systems that 
+optimize the user experience by using less bandwidth and reducing web server load time. Systems that
 use web caching include Search Engines, Web Browsers, Content Delivery Networks and Web Proxies.
 
 The caching mechanism of these systems can be [controlled](#options-for-controlling-caching)
 using caching meta tags or HTTP caching headers.
 
-See [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
+See [How Web Caching Works](http://qnimate.com/all-about-web-caching/).
 
-**Expiration Time for Caching:**  
-Once a resource is stored in a cache, it could theoretically be served by the cache forever. 
-Caches have finite storage so items are periodically removed from storage. This process is 
-called cache eviction. On the other side, some resources may change on the server so the cache 
-should be updated. As HTTP is a client-server protocol, servers can't contact caches and clients 
-when a resource changes; they have to communicate an expiration time for the resource. Before 
-this expiration time, the resource is fresh; after the expiration time, the resource is stale. 
-Eviction algorithms often privilege fresh resources over stale resources. Note that a stale 
-resource is not evicted or ignored; when the cache receives a request for a stale resource, 
-it forwards this request with a `If-None-Match` to check if it is in fact still fresh. 
-If so, the server returns a `304` (Not Modified) header without sending the body of the requested 
-resource, saving some bandwidth. 
+**Expiration Time for Caching:**
+Once a resource is stored in a cache, it could theoretically be served by the cache forever.
+Caches have finite storage so items are periodically removed from storage. This process is
+called cache eviction. On the other side, some resources may change on the server so the cache
+should be updated. As HTTP is a client-server protocol, servers can't contact caches and clients
+when a resource changes; they have to communicate an expiration time for the resource. Before
+this expiration time, the resource is fresh; after the expiration time, the resource is stale.
+Eviction algorithms often privilege fresh resources over stale resources. Note that a stale
+resource is not evicted or ignored; when the cache receives a request for a stale resource,
+it forwards this request with a `If-None-Match` to check if it is in fact still fresh.
+If so, the server returns a `304` (Not Modified) header without sending the body of the requested
+resource, saving some bandwidth.
 
 **`expirationTime = responseTime + freshnessLifetime – currentAge`**
 
-The **`freshnessLifetime`** is calculated based on several headers. If a `Cache-control: max-age=N` header 
-is specified, then the freshness lifetime is equal to N. If this header is not present, which is very 
-often the case, then an `Expires` header is checked. If an `Expires` header exists, then its value minus 
-the value of the `Date` header determines 
-the freshness lifetime. Finally, if neither header is present, then `Last-Modified` header is checked. 
-If this header is present, then the cache’s freshness lifetime is equal to the value of the `Date` header 
-minus the value of the `Last-modified` header divided by 10. If none of these headers are present then the 
+The **`freshnessLifetime`** is calculated based on several headers. If a `Cache-control: max-age=N` header
+is specified, then the freshness lifetime is equal to N. If this header is not present, which is very
+often the case, then an `Expires` header is checked. If an `Expires` header exists, then its value minus
+the value of the `Date` header determines
+the freshness lifetime. Finally, if neither header is present, then `Last-Modified` header is checked.
+If this header is present, then the cache’s freshness lifetime is equal to the value of the `Date` header
+minus the value of the `Last-modified` header divided by 10. If none of these headers are present then the
 response is not cached.
 
 **`responseTime`** is the time at which the response was received according to the client.
 
-The **`currentAge`** is usually close to zero, but is influenced by the presence of an `Age` header, 
-which proxy caches may add to indicate the length of time a document has been sitting in its cache.  
+The **`currentAge`** is usually close to zero, but is influenced by the presence of an `Age` header,
+which proxy caches may add to indicate the length of time a document has been sitting in its cache.
 
-See also [How Web Caching Works](http://qnimate.com/all-about-web-caching/), 
+See also [How Web Caching Works](http://qnimate.com/all-about-web-caching/),
 [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
 ## Options for Controlling Caching ##
@@ -225,66 +241,68 @@ There are multiple options for controlling caching.
 The following information is presented in order of simplicity and clarity.
 Background that may be useful:
 
-* [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/) - need HTML to always load so can determine other resources
-* [Strategies for Cache-Busting CSS](https://css-tricks.com/strategies-for-cache-busting-css/) - can also be applied to files other than CSS
+*   [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/) - need HTML to always load so can determine other resources
+*   [Strategies for Cache-Busting CSS](https://css-tricks.com/strategies-for-cache-busting-css/) - can also be applied to files other than CSS
 
 ### Cache-Control Headers/Expires Headers (Meta Tags) ###
-Cache-Control was introduced in HTTP 1.1 whereas Expires header has introduced in HTTP 1.0. 
+Cache-Control was introduced in HTTP 1.1 whereas Expires header has introduced in HTTP 1.0.
 So both must be used for better support of clients.
 
 #### Cacheability: ####
-* **`public`** - Indicates that the response may be cached by any cache. This gives a greater performance gain and a much 
-greater scalability gain. The client may receive cached copies, never having obtained the original directly from 
-the server. 
-* **`private`** - Indicates that the response is intended for a single user (the client that the IP was created for) 
-and must not be stored by a shared (proxy server) cache. Generally this applies to a cache maintained by that client 
-itself.
-* **`no-cache`** - Systems will cache the response, but this forces caches to submit the request to the origin
-server for validation before releasing a cached copy.
-* **`only-if-cached`** - Indicates not to retrieve new data. This being the case, the server wishes the client to obtain
-a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid
-contacting the origin-server to see if a newer copy exists.
+
+*   **`public`** - Indicates that the response may be cached by any cache. This gives a greater performance gain and a much
+    greater scalability gain. The client may receive cached copies, never having obtained the original directly from the server.
+*   **`private`** - Indicates that the response is intended for a single user (the client that the IP was created for)
+    and must not be stored by a shared (proxy server) cache. Generally this applies to a cache maintained by that client itself.
+*   **`no-cache`** - Systems will cache the response, but this forces caches to submit the request to the origin
+    server for validation before releasing a cached copy.
+*   **`only-if-cached`** - Indicates not to retrieve new data. This being the case, the server wishes the client to obtain
+    a response only once and then cache. From this moment the client should keep releasing a cached copy and avoid
+    contacting the origin-server to see if a newer copy exists.
 
 #### Expiration: ####
-* **`max-age=<seconds>`** - Specifies in seconds the maximum amount of time a resource will be considered fresh. 
-Contrary to `Expires`, this directive is relative to the time of the request. After the response has expired 
-it's deleted from the cache.
-* **`s-maxage=<seconds>`** - Overrides `max-age` or the `Expires` header, but it only applies to shared caches 
-(e.g. **proxies**) and is ignored by a private cache.
-* **`max-stale[=<seconds>]`** - Indicates that the client is willing to accept a response that has exceeded 
-its expiration time. Optionally, you can assign a value in seconds, indicating the time the response must not be 
-expired by.
-* **`min-fresh=<seconds>`** - Indicates that the client wants a response that will still be fresh at least 
-the specified number of seconds.
+
+*   **`max-age=<seconds>`** - Specifies in seconds the maximum amount of time a resource will be considered fresh.
+    Contrary to `Expires`, this directive is relative to the time of the request. After the response has expired
+    it's deleted from the cache.
+*   **`s-maxage=<seconds>`** - Overrides `max-age` or the `Expires` header, but it only applies to shared caches
+    (e.g. **proxies**) and is ignored by a private cache.
+*   **`max-stale[=<seconds>]`** - Indicates that the client is willing to accept a response that has exceeded
+    its expiration time. Optionally, you can assign a value in seconds, indicating the time the response must not be expired by.
+*   **`min-fresh=<seconds>`** - Indicates that the client wants a response that will still be fresh at least
+    the specified number of seconds.
 
 #### Revalidation and Reloading: ####
-* **`must-revalidate`** - The cache must verify the status of the stale resources before using it and expired ones 
-should not be used.
-* **`proxy-revalidate`** - Same as `must-revalidate`, but it only applies to shared caches (e.g. **proxies**) 
-and is ignored by a private cache.
-* **`immutable`** - Indicates that the response body will not change over time. The resource, if unexpired, 
-is unchanged on the server and therefore the client should not send a conditional revalidation for it 
-(e.g. `If-None-Match` or `If-Modified-Since`) to check for updates, even when the user explicitly refreshes 
-the page. clients that aren't aware of this extension must ignore them as per the HTTP specification. In 
-Firefox, `immutable` is only honored on `https://` transactions. For more information, see also this 
-[blog post](http://bitsup.blogspot.com/2016/05/cache-control-immutable.html).
 
+*   **`must-revalidate`** - The cache must verify the status of the stale resources before using it and expired ones
+    should not be used.
+*   **`proxy-revalidate`** - Same as `must-revalidate`, but it only applies to shared caches (e.g. **proxies**)
+    and is ignored by a private cache.
+*   **`immutable`** - Indicates that the response body will not change over time. The resource, if unexpired,
+    is unchanged on the server and therefore the client should not send a conditional revalidation for it
+    (e.g. `If-None-Match` or `If-Modified-Since`) to check for updates, even when the user explicitly refreshes
+    the page. clients that aren't aware of this extension must ignore them as per the HTTP specification.
+    In Firefox, `immutable` is only honored on `https://` transactions. For more information, see also this
+    [blog post](http://bitsup.blogspot.com/2016/05/cache-control-immutable.html).
 
 #### Other: ####
-* **`no-store`** - The cache should not store anything about the client request or server response.
-* **`no-transform`** - No transformations or conversions should be made to the resource. The 
-Content-Encoding, Content-Range, Content-Type headers must not be modified by a proxy. A non-
-transparent proxy might, for example, convert between image formats in order to save cache space 
-or to reduce the amount of traffic on a slow link. The `no-transform` directive disallows this.
+
+*   **`no-store`** - The cache should not store anything about the client request or server response.
+*   **`no-transform`** - No transformations or conversions should be made to the resource.
+    The `Content-Encoding`, `Content-Range`, `Content-Type` headers must not be modified by a proxy. A non-
+    transparent proxy might, for example, convert between image formats in order to save cache space
+    or to reduce the amount of traffic on a slow link. The `no-transform` directive disallows this.
 
 ### Default Cache-Control Headers ###
+
 It seems that the default for Cache-Control headers is: **private**
 
-See [What's default value of cache control](https://stackoverflow.com/a/14497736/9277979)
+See [What's default value of cache control](https://stackoverflow.com/a/14497736/9277979).
 
-### Setting Headers Using .htaccess ###
-`.htaccess` is the easiest way to set headers for your site. A basic example of a `.htaccess`
-file is: 
+### Setting Headers Using `.htaccess` ###
+
+`.htaccess` is the easiest way to set headers for your site. A basic example of a `.htaccess` file is:
+
 ```.htaccess
 Header set Cache-control "max-age=262000, public"
 ```
@@ -292,7 +310,7 @@ Header set Cache-control "max-age=262000, public"
 Below is how to set Cache-Control headers for different file types. "If the file type is css,
 jpeg, jpg, png, gif, js, or ico then apply the following header to it.":
 ```.htaccess
-#One month for most static assets
+# One month for most static assets.
 <filesMatch ".(css|jpg|jpeg|png|gif|js|ico)$">
 Header set Cache-Control "max-age=262000, public"
 </filesMatch>
@@ -300,21 +318,22 @@ Header set Cache-Control "max-age=262000, public"
 
 This next example shows how to cache images for a year, but keep css and js files for a month.
 ```.htaccess
-#One year for image files
+# One year for image files.
 <filesMatch ".(jpg|jpeg|png|gif|ico)$">
 Header set Cache-Control "max-age=31536000, public"
 </filesMatch>
 
-#One month for css and js
+# One month for css and js.
 <filesMatch ".(css|js)$">
 Header set Cache-Control "max-age=2628000, public"
 </filesMatch>
 ```
 
-See [Cache Control](https://varvy.com/pagespeed/cache-control.html)
+See [Cache Control](https://varvys.com/pagespeed/cache-control.html).
 
 #### Examples: ####
-Expires sets a future date and time that the response will be cached until. If assigned a past 
+
+Expires sets a future date and time that the response will be cached until. If assigned a past
 time or `-1` then these systems do not cache the response. Here these systems will not cache
 the response:
 ```
@@ -327,16 +346,16 @@ This would be entered into an `.html` file as:
 <meta http-equiv="Cache-Control" content="no-store"/>
 ```
 
-Here these systems will cache the response but before serving the response the client will try to 
-revalidate but as there exists no `Last-Modified` header, the client will send revalidation request 
-without `If-Modified-Since` and therefore the server will responsd with `200` status code which is 
+Here these systems will cache the response but before serving the response the client will try to
+revalidate but as there exists no `Last-Modified` header, the client will send revalidation request
+without `If-Modified-Since` and therefore the server will responsd with `200` status code which is
 refreshing the page again.
 ```
 Expires: Thu, 15 Aug 2060 09:00:00 GMT
 Cache-Control: no-cache, must-revalidate, expires=360000000
 ```
 
-Here the browser will cache the document until 15 Aug 2015 09:00:00. The client will not revalidate the 
+Here the browser will cache the document until 15 Aug 2015 09:00:00. The client will not revalidate the
 cache before serving.
 ```
 Expires: Thu, 15 Aug 2015 09:00:00 GMT
@@ -348,7 +367,9 @@ click on ***Network***, select the file you want to view, and click ***Headers**
 
 ![headers in developer mode](https://i.stack.imgur.com/1dolH.png)
 
-See [How Web Caching Works](http://qnimate.com/all-about-web-caching/), [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching), [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)
+See [How Web Caching Works](http://qnimate.com/all-about-web-caching/),
+[HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching),
+[Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control).
 
 ### Unique Resource Name (Cache-Busting) ###
 
@@ -382,15 +403,17 @@ http://some-server/some-path/data-filename.csv?ver=1
 ```
 
 However, the above is really no better than adding a version number because the URL is static.
-Instead, the attached version should be dynamically formed, such as by using a random number or date/time 
+Instead, the attached version should be dynamically formed, such as by using a random number or date/time
 (see example below).
 A random number could theoretically be encountered again, especially if the code logic is not robust.
 A date/time could be encountered again if the content is reloaded in a period that is shorter
 than the precision of the date/time, so date/time needs to be precise enough to ensure uniqueness.
 
 #### Examples: ####
+
 Common JavaScript libraries often provide a means to format such URLs dynamically through
 a `"cache=false"` mechanism, for example:
+
 ```javascript
 $.ajax({
   url:"path/to/file",
@@ -401,6 +424,7 @@ $.ajax({
 });
 ```
 The following Leaflet example uses `new Date().getTime()` to force always reading a resource:
+
 ```javascript
 // Leaflet MapBox
 var mymap = L.map('mapbox').setView([40.5853, -105.0844], 13);
@@ -412,8 +436,8 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'your access token',
     dateTime:  new Date().getTime()
 }).addTo(mymap);
-
 ```
+
 Similarly, the following avoids caching by using a query parameter based on current time.
 
 ```javascript
@@ -434,9 +458,9 @@ It may make sense to use a file resource to indicate a timestamp,
 in particular for static website files.
 For example, create two files:
 
-* `product1-timestamp.txt` - a file containing only a timestamp such as milliseconds or date/time string that
-can be used in a URL query parameter
-* `product1.xxx` - the data product (file extension would be appropriate for file type)
+*   `product1-timestamp.txt` - a file containing only a timestamp such as milliseconds or date/time string that
+    can be used in a URL query parameter
+*   `product1.xxx` - the data product (file extension would be appropriate for file type)
 
 The web application code that uses the product can use a no-cache request for `product-timestamp.txt`.
 The contents of the file can the be used in an Ajax query of `product.xxx?version=timestamp`.
@@ -456,82 +480,83 @@ are useful to help prevent simultaneous updates of a resource from overwriting e
 If the resource at a given URL changes, a new `ETag` value must be generated. Etags are therefore
 similar to fingerprints and might also be used for tracking purposes by some servers. A comparison
 of Etags allows quick evaluation of whether two representations of a resource are the same,
-but they might also be set to persist indefinitely by a tracking server. 
+but they might also be set to persist indefinitely by a tracking server.
 
 **Syntax:**
+
 ```
 ETag: W/"<etag_value>"
 ETag: "<etag_value>"
 ```
 
 **Directives:**
-* **`W/`** - (optional) `'W/'` (case-sensitive) indicates that a weak validator is used. Weak 
-validators are easy to generate but are far less useful for comparisons. Strong validators are 
-ideal for comparisons but can be very difficult to generate efficiently. Weak Etag values of 
-two representations of the same resources might be semantically equivalent, but not byte-for-byte 
-identical.
-* **`<etag_value>`** - Entity tags uniquely representing the requested resources. They are a 
-string of ASCII characters placed between double quotes (Like `"675af34563dc-tr34"`). The method 
-by which `ETag` values are generated is not specified. Oftentimes, a hash of the content, a hash 
-of the last modification timestamp, or just a revision number is used. For example, MDN uses a 
-hash of hexadecimal digits of the wiki content.
 
-See this [Stackoverflow](https://stackoverflow.com/questions/162105/whats-the-best-way-to-create-an-etag) 
+*   **`W/`** - (optional) `'W/'` (case-sensitive) indicates that a weak validator is used. Weak
+    validators are easy to generate but are far less useful for comparisons. Strong validators are
+    ideal for comparisons but can be very difficult to generate efficiently. Weak Etag values of
+    two representations of the same resources might be semantically equivalent, but not byte-for-byte
+    identical.
+*   **`<etag_value>`** - Entity tags uniquely representing the requested resources. They are a
+    string of ASCII characters placed between double quotes (Like `"675af34563dc-tr34"`). The method
+    by which `ETag` values are generated is not specified. Oftentimes, a hash of the content, a hash
+    of the last modification timestamp, or just a revision number is used. For example, MDN uses a
+    hash of hexadecimal digits of the wiki content.
+
+See this [Stackoverflow](https://stackoverflow.com/questions/162105/whats-the-best-way-to-create-an-etag)
 for advice on creating an ETag.
-See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
+See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
 
 See also [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag).
 
 ### Meta Tags, ETags, or Cache-Busting? ###
 
-From research online there seems to be a fair amount of combining meta tags with cache 
-busting techniques. 
-Meta tags can specify how and when resources should be reloaded and 
-when to discard what lies in the cache. To increase assurance that different resources are 
-being reloaded 
-use cache busting techniques, such as adding file name extensions or editing the file names 
+From research online there seems to be a fair amount of combining meta tags with cache busting techniques.
+Meta tags can specify how and when resources should be reloaded and
+when to discard what lies in the cache. To increase assurance that different resources are being reloaded
+use cache busting techniques, such as adding file name extensions or editing the file names
 to include random data. Between these two techniques there can be a fair level of certainty
 that resources will be reloaded appropriately.
 
-From this [article](https://css-tricks.com/strategies-for-cache-busting-css/) it seems that 
+From this [article](https://css-tricks.com/strategies-for-cache-busting-css/) it seems that
 using ETags may not be the best solution in general. There is a quote from Yahoo which [says](https://developer.yahoo.com/performance/rules.html):
 
->The problem with ETags is that they typically are constructed using attributes that make them 
-unique to a specific server hosting a site. ETags won't match when a browser gets the original 
-component from one server and later tries to validate that component on a different server, a 
-situation that is all too common on Web sites that use a cluster of servers to handle requests.
+>The problem with ETags is that they typically are constructed using attributes that make them
+unique to a specific server hosting a site. ETags won't match when a browser gets the original
+component from one server and later tries to validate that component on a different server,
+a situation that is all too common on Web sites that use a cluster of servers to handle requests.
 
 ### File Expiration Metadata - Needs Further Research ###
 
 It is also possible to format file content with metadata to control caching.
 **Need to describe here.**
 
-* What file types?
-* HTML `<file>` tag?
-* How are images and other files handled?
+*   What file types?
+*   HTML `<file>` tag?
+*   How are images and other files handled?
 
 ## Options for Controlling Caching in Web Services - Needs Further Research ##
 
 This content needs to be completed.
 
-* What are best practices for response headers for web services?
-* How does this play with mime types?
-* How to use pre-seeded caches to avoid latency.
-* How to use caching services such as [memcached](https://memcached.org/).
+*   What are best practices for response headers for web services?
+*   How does this play with mime types?
+*   How to use pre-seeded caches to avoid latency.
+*   How to use caching services such as [memcached](https://memcached.org/).
 
 ## Resources ##
+
 Much of the information provided in this documentation is compiled from the sources below:
 
-* [How Web Caching Works](http://qnimate.com/all-about-web-caching/)   
-* [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)  
-* [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)  
-* [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
-* [Cache Control](https://varvy.com/pagespeed/cache-control.html)
+*   [How Web Caching Works](http://qnimate.com/all-about-web-caching/)
+*   [HTTP Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
+*   [Private vs Public in Cache-Control (stackoverflow)](https://stackoverflow.com/questions/3492319/private-vs-public-in-cache-control)
+*   [ETag - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
+*   [Cache Control](https://varvys.com/pagespeed/cache-control.html)
 
 Extra reading:
 
-* [AWS Caching Overview](https://aws.amazon.com/caching/)    
-* [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c) 
-* [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)  
-* [Strategies for Cache-Busting CSS](https://css-tricks.com/strategies-for-cache-busting-css/)
-* [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/)
+*   [AWS Caching Overview](https://aws.amazon.com/caching/)
+*   [A Web Developers Guide to Caching](https://medium.com/@codebyamir/a-web-developers-guide-to-browser-caching-cc41f3b73e7c)
+*   [Web Caching Basics: Terminology, HTTP Headers, and Caching Strategies](https://www.digitalocean.com/community/tutorials/web-caching-basics-terminology-http-headers-and-caching-strategies)
+*   [Strategies for Cache-Busting CSS](https://css-tricks.com/strategies-for-cache-busting-css/)
+*   [Two Simple Rules for HTTP Caching](https://blog.httpwatch.com/2007/12/10/two-simple-rules-for-http-caching/)
